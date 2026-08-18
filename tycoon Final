@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semiconductor Fab Pump Tycoon - Complete</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #00ff88;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1.2fr 1.8fr 1.2fr 1.2fr;
+            grid-template-rows: auto 1fr 1fr;
+            gap: 8px;
+            padding: 8px;
+            height: 100vh;
+            width: 100%;
+        }
+
+        header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(90deg, #0a0e27, #1a1f3a);
+            border: 2px solid #00ff88;
+            border-radius: 8px;
+            padding: 12px 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #00ff88;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .game-stats {
+            display: flex;
+            gap: 40px;
+            font-size: 13px;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            text-align: right;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            color: #00ff88;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .stat-value.warning {
+            color: #ffaa00;
+        }
+
+        .stat-value.critical {
+            color: #ff4444;
+        }
+
+        .panel {
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.8), rgba(15, 20, 38, 0.8));
+            border: 2px solid #00ff88;
+            border-radius: 8px;
+            padding: 12px;
+            overflow-y: auto;
+            font-size: 11px;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .panel::-webkit-scrollbar-track {
+            background: #0a0e27;
+        }
+
+        .panel::-webkit-scrollbar-thumb {
+            background: #00ff88;
+            border-radius: 3px;
+        }
+
+        .section-title {
+            color: #00ff88;
+            font-weight: bold;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #00ff88;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .subsection {
+            margin-bottom: 10px;
+        }
+
+        .pump-item {
+            background: rgba(15, 20, 38, 0.6);
+            border: 1px solid #00aa66;
+            border-radius: 4px;
+            padding: 8px;
+            margin-bottom: 6px;
+            font-size: 10px;
+        }
+
+        .pump-item.critical-health {
+            border-color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        .pump-item.warning-health {
+            border-color: #ffaa00;
+            background: rgba(255, 170, 0, 0.1);
+        }
+
+        .pump-bar {
+            display: flex;
+            gap: 4px;
+            margin-top: 4px;
+            font-size: 9px;
+        }
+
+        .bar {
+            flex: 1;
+            background: #0a0e27;
+            border: 1px solid #00ff88;
+            border-radius: 2px;
+            height: 14px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #00cc66);
+            transition: width 0.2s;
+        }
+
+        .bar-fill.warning {
+            background: linear-gradient(90deg, #ffaa00, #ff6600);
+        }
+
+        .bar-fill.critical {
+            background: linear-gradient(90deg, #ff4444, #ff0000);
+        }
+
+        .financial-summary {
+            background: rgba(0, 40, 20, 0.2);
+            border: 1px solid #00aa66;
+            border-radius: 4px;
+            padding: 8px;
+            margin-top: 6px;
+        }
+
+        .financial-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3px;
+            font-size: 10px;
+        }
+
+        .financial-label {
+            color: #888;
+        }
+
+        .financial-amount {
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        .financial-amount.negative {
+            color: #ff6666;
+        }
+
+        .contract-item {
+            background: rgba(0, 40, 80, 0.2);
+            border: 1px solid #0088ff;
+            border-radius: 4px;
+            padding: 8px;
+            margin-bottom: 6px;
+        }
+
+        .contract-customer {
+            color: #00ff88;
+            font-weight: bold;
+            font-size: 10px;
+            margin-bottom: 3px;
+        }
+
+        .contract-terms {
+            color: #aaa;
+            font-size: 9px;
+            line-height: 1.4;
+        }
+
+        .cassette-item {
+            background: rgba(80, 40, 0, 0.2);
+            border: 1px solid #ffaa00;
+            border-radius: 4px;
+            padding: 8px;
+            margin-bottom: 6px;
+        }
+
+        .cassette-item.active {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .cassette-name {
+            color: #ffaa00;
+            font-weight: bold;
+            font-size: 10px;
+            margin-bottom: 3px;
+        }
+
+        .cassette-progress {
+            color: #aaa;
+            font-size: 9px;
+            margin-bottom: 3px;
+        }
+
+        .recipe-selector {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .recipe-btn {
+            flex: 1;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            padding: 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 9px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .recipe-btn:hover {
+            background: rgba(0, 255, 136, 0.3);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .recipe-btn.active {
+            background: rgba(0, 255, 136, 0.4);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.7);
+        }
+
+        .button {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 10px;
+            font-weight: bold;
+            transition: all 0.2s;
+            width: 100%;
+            margin-top: 4px;
+        }
+
+        .button:hover {
+            background: rgba(0, 255, 136, 0.3);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .button.secondary {
+            background: rgba(100, 150, 255, 0.1);
+            border-color: #6688ff;
+            color: #6688ff;
+        }
+
+        .button.secondary:hover {
+            background: rgba(100, 150, 255, 0.3);
+            box-shadow: 0 0 10px rgba(100, 150, 255, 0.5);
+        }
+
+        .button.danger {
+            background: rgba(255, 100, 100, 0.1);
+            border-color: #ff6666;
+            color: #ff6666;
+        }
+
+        .button.danger:hover {
+            background: rgba(255, 100, 100, 0.3);
+            box-shadow: 0 0 10px rgba(255, 100, 100, 0.5);
+        }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* PUMP MAP STYLING */
+        .pump-map-container {
+            position: relative;
+            background: #0a0a0a;
+            border: 1px solid #00aa66;
+            border-radius: 4px;
+            height: 100%;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .pump-on-map {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border: 2px solid #00aa66;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: rgba(10, 20, 40, 0.7);
+        }
+
+        .pump-on-map.working {
+            border-color: #00ff88;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+        }
+
+        .pump-on-map.failed {
+            border-color: #ff4444;
+            box-shadow: 0 0 10px rgba(255, 68, 68, 0.6);
+            background: rgba(255, 68, 68, 0.15);
+        }
+
+        .pump-on-map:hover {
+            transform: scale(1.1);
+        }
+
+        .pump-icon {
+            width: 45px;
+            height: 45px;
+            margin-bottom: 2px;
+        }
+
+        .pump-label {
+            font-weight: bold;
+            color: #fff;
+            font-size: 7px;
+            text-align: center;
+        }
+
+        .pump-status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-top: 2px;
+        }
+
+        .pump-status-dot.working {
+            background: #00ff88;
+            box-shadow: 0 0 4px #00ff88;
+        }
+
+        .pump-status-dot.failed {
+            background: #ff4444;
+            box-shadow: 0 0 4px #ff4444;
+        }
+
+        .log-entry {
+            padding: 6px;
+            margin-bottom: 4px;
+            border-left: 2px solid #00ff88;
+            padding-left: 8px;
+            font-size: 9px;
+            color: #aaa;
+            line-height: 1.3;
+        }
+
+        .log-entry.error {
+            border-left-color: #ff4444;
+            color: #ff6666;
+        }
+
+        .log-entry.success {
+            border-left-color: #00ff88;
+            color: #00ff88;
+        }
+
+        .log-entry.warning {
+            border-left-color: #ffaa00;
+            color: #ffaa00;
+        }
+
+        .log-time {
+            color: #666;
+            font-size: 8px;
+            display: inline;
+            margin-right: 4px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1f3a 0%, #0f1426 100%);
+            border: 3px solid #00ff88;
+            padding: 20px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+        }
+
+        .modal-title {
+            color: #00ff88;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #00ff88;
+            padding-bottom: 8px;
+        }
+
+        .equipment-option {
+            background: rgba(0, 50, 100, 0.2);
+            border: 1px solid #0088ff;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .equipment-option:hover {
+            background: rgba(0, 100, 200, 0.3);
+            border-color: #00ff88;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        }
+
+        .equipment-name {
+            color: #00ff88;
+            font-weight: bold;
+            font-size: 11px;
+            margin-bottom: 3px;
+        }
+
+        .equipment-specs {
+            color: #aaa;
+            font-size: 9px;
+            margin-bottom: 3px;
+            line-height: 1.3;
+        }
+
+        .vendor-badge {
+            display: inline-block;
+            background: rgba(255, 170, 0, 0.2);
+            border: 1px solid #ffaa00;
+            color:            #ffaa00;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 8px;
+            margin-left: 4px;
+        }
+
+        .game-over {
+            text-align: center;
+            color: #ff4444;
+        }
+
+        .game-over h2 {
+            color: #ff4444;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .game-over p {
+            color: #aaa;
+            margin-bottom: 8px;
+            font-size: 11px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <div class="header-title">
+                ⚙️ SEMICONDUCTOR FAB PUMP TYCOON
+            </div>
+            <div class="game-stats">
+                <div class="stat">
+                    <div class="stat-label">Cash</div>
+                    <div class="stat-value" id="cashDisplay">$500,000</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Month</div>
+                    <div class="stat-value" id="monthDisplay">1</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Revenue/Mo</div>
+                    <div class="stat-value" id="revenueDisplay">$0</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Costs/Mo</div>
+                    <div class="stat-value" id="costsDisplay">$0</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Working Pumps</div>
+                    <div class="stat-value" id="pumpStatusDisplay">0/0</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Active Contracts</div>
+                    <div class="stat-value" id="contractsDisplay">0</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- FINANCIAL PANEL (left column, row 1) -->
+        <div class="panel" style="grid-column: 1; grid-row: 2;">
+            <div class="section-title">💰 Financial Status</div>
+            <div class="financial-summary">
+                <div class="financial-item">
+                    <span class="financial-label">Starting Cash</span>
+                    <span class="financial-amount">$500,000</span>
+                </div>
+                <div class="financial-item">
+                    <span class="financial-label">Current Cash</span>
+                    <span class="financial-amount" id="finCash">$500,000</span>
+                </div>
+                <div class="financial-item">
+                    <span class="financial-label">Revenue (All Time)</span>
+                    <span class="financial-amount" id="finRevenue">$0</span>
+                </div>
+                <div class="financial-item">
+                    <span class="financial-label">Expenses (All Time)</span>
+                    <span class="financial-amount negative" id="finExpenses">$0</span>
+                </div>
+                <div class="financial-item">
+                    <span class="financial-label">Net Profit/Loss</span>
+                    <span class="financial-amount" id="finNet">$0</span>
+                </div>
+            </div>
+
+            <div class="section-title" style="margin-top: 12px;">📊 Monthly Breakdown</div>
+            <div class="financial-summary">
+                <div class="financial-item">
+                    <span class="financial-label">Contract Revenue</span>
+                    <span class="financial-amount" id="monthRevenue">$0</span>
+                </div>
+                <div class="financial-item">
+                    <span class="financial-label">Pump Maintenance</span>
+                    <span class="financial-amount negative" id="monthMaintenance">$0</span>
+                </div>
+                <div class="financial-item">
+                    <span class="financial-label">System Maintenance</span>
+                    <span class="financial-amount negative" id="monthSystemMaint">$0</span>
+                </div>
+                <div class="financial-item">
+                    <span class="financial-label">Equipment Upgrades</span>
+                    <span class="financial-amount negative" id="monthUpgrades">$0</span>
+                </div>
+            </div>
+
+            <div class="section-title" style="margin-top: 12px;">🔧 Quick Actions</div>
+            <button class="button secondary" onclick="showEquipmentMenu()">Buy Equipment</button>
+            <button class="button secondary" onclick="showUpgradesMenu()">System Upgrades</button>
+            <button class="button danger" onclick="showRepairMenu()">Emergency Repair</button>
+            <button class="button" onclick="togglePause()">⏸️ <span id="pauseLabel">PAUSE</span></button>
+        </div>
+
+        <!-- PUMP SYSTEM MAP (middle column, rows 1-2) -->
+        <div class="panel" style="grid-column: 2; grid-row: 2 / 4;">
+            <div class="section-title">🗺️ Pump System Map</div>
+            <div class="pump-map-container" id="pumpMapContainer"></div>
+        </div>
+
+        <!-- CONTRACTS & CASSETTES (right column, row 1) -->
+        <div class="panel" style="grid-column: 3; grid-row: 2;">
+            <div class="section-title">📋 Active Contracts</div>
+            <div id="contractList" style="max-height: 300px; overflow-y: auto;"></div>
+            
+            <div class="section-title" style="margin-top: 12px;">🎛️ Cassette Queue</div>
+            <div class="recipe-selector">
+                <button class="recipe-btn" onclick="setRecipe('STANDARD')" id="recipe-STANDARD">STD</button>
+                <button class="recipe-btn" onclick="setRecipe('PRECISION')" id="recipe-PRECISION">PREC</button>
+                <button class="recipe-btn" onclick="setRecipe('HIGHTEMP')" id="recipe-HIGHTEMP">HI-T</button>
+            </div>
+            <div id="cassetteList" style="max-height: 250px; overflow-y: auto;"></div>
+            <button class="button" onclick="addCassette()">+ Add Cassette</button>
+        </div>
+
+        <!-- PUMPS & EQUIPMENT STATUS (right column, row 2) -->
+        <div class="panel" style="grid-column: 4; grid-row: 2;">
+            <div class="section-title">🌀 Pump Inventory</div>
+            <div id="pumpsList"></div>
+            <button class="button secondary" onclick="buyTurboPump()">
+                T: Buy Turbo ($50k)
+            </button>
+            <button class="button secondary" onclick="buyRotaryPump()">
+                R: Buy Rotary ($15k)
+            </button>
+
+            <div class="section-title" style="margin-top: 12px;">⬆️ System Equipment</div>
+            <div id="equipmentStatus"></div>
+        </div>
+
+        <!-- EVENT LOG (spans bottom) -->
+        <div class="panel" style="grid-column: 1 / -1; grid-row: 3;">
+            <div class="section-title">📜 Event Log</div>
+            <div id="eventLog" style="max-height: 120px; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+    <div class="modal" id="equipmentModal">
+        <div class="modal-content">
+            <div class="modal-title">🔬 Purchase Pumping Equipment</div>
+            <div id="equipmentOptions"></div>
+            <button class="button" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <div class="modal" id="upgradesModal">
+        <div class="modal-content">
+            <div class="modal-title">⬆️ System Upgrades</div>
+            <div id="upgradesOptions"></div>
+            <button class="button" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <div class="modal" id="repairModal">
+        <div class="modal-content">
+            <div class="modal-title">🔧 Emergency Repair Service</div>
+            <div id="repairOptions"></div>
+            <button class="button" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <div class="modal" id="gameOverModal">
+        <div class="modal-content">
+            <div class="game-over">
+                <h2>⚠️ BANKRUPTCY</h2>
+                <p id="gameOverMessage"></p>
+                <button class="button" onclick="location.reload()">Restart Game</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== GAME STATE =====
+        const game = {
+            cash: 500000,
+            month: 1,
+            paused: false,
+            gameOver: false,
+
+            // FINANCIAL
+            totalRevenue: 0,
+            totalExpenses: 0,
+            monthlyRevenue: 0,
+            monthlyMaintenance: 0,
+            monthlySystemMaint: 0,
+            monthlyUpgrades: 0,
+
+            // PUMPS
+            pumps: [],
+            pumpIDCounter: 0,
+
+            // CONTRACTS
+            contracts: [],
+            contractIDCounter: 0,
+
+            // CASSETTES
+            cassettes: [],
+            cassetteIDCounter: 0,
+            currentRecipe: 'STANDARD',
+
+            // EQUIPMENT (boolean flags + counts)
+            equipment: {
+                roughing: { owned: false, cost: 30000, maint: 1500 },
+                highVac: { owned: false, cost: 80000, maint: 4000 },
+                cryo: { owned: false, cost: 150000, maint: 7500 },
+                cooling: { owned: false, cost: 50000, maint: 2000 },
+                abatement: { owned: false, cost: 45000, maint: 2500 },
+            }
+        };
+
+        // ===== PUMP TYPES =====
+        const pumpTypes = {
+            TURBOMOLECULAR: {
+                name: 'Turbomolecular Pump',
+                cost: 50000,
+                maintenance: 2000,
+                failureRate: 0.02,
+                capacity: 100,
+                baseHealth: 100,
+                lifespan: 100,
+                symbol: 'TM'
+            },
+            ROTARY_VANE: {
+                name: 'Rotary Vane Pump',
+                cost: 15000,
+                maintenance: 800,
+                failureRate: 0.04,
+                capacity: 40,
+                baseHealth: 100,
+                lifespan: 80,
+                symbol: 'RV'
+            }
+        };
+
+        // ===== RECIPE SPECIFICATIONS =====
+        const recipes = {
+            STANDARD: {
+                name: 'Standard Wafer Processing',
+                duration: 3,
+                pumpingReq: 50,
+                revenuePerWafer: 5000,
+                qualityBonus: 1.0
+            },
+            PRECISION: {
+                name: 'Precision High-Vac',
+                duration: 5,
+                pumpingReq: 120,
+                revenuePerWafer: 12000,
+                qualityBonus: 1.3,
+                requiresHighVac: true
+            },
+            HIGHTEMP: {
+                name: 'High-Temperature Process',
+                duration: 4,
+                pumpingReq: 80,
+                revenuePerWafer: 8000,
+                qualityBonus: 1.2,
+                requiresCooling: true
+            }
+        };
+
+        // ===== CONTRACT DEFINITIONS =====
+        const contractLibrary = [
+            {
+                customer: 'TSMC Prototype',
+                wafersPerMonth: 50,
+                monthlyFee: 100000,
+                deadline: 12,
+                penalty: 20000,
+                recipe: 'STANDARD'
+            },
+            {
+                customer: 'Samsung Advanced',
+                wafersPerMonth: 100,
+                monthlyFee: 250000,
+                deadline: 24,
+                penalty: 50000,
+                recipe: 'PRECISION',
+                requiresHighVac: true
+            },
+            {
+                customer: 'Intel Research',
+                wafersPerMonth: 75,
+                monthlyFee: 180000,
+                deadline: 18,
+                penalty: 30000,
+                recipe: 'STANDARD'
+            },
+            {
+                customer: 'Micron Development',
+                wafersPerMonth: 40,
+                monthlyFee: 80000,
+                deadline: 12,
+                penalty: 15000,
+                recipe: 'HIGHTEMP',
+                requiresCooling: true
+            },
+            {
+                customer: 'SK Hynix Specialty',
+                wafersPerMonth: 60,
+                monthlyFee: 150000,
+                deadline: 20,
+                penalty: 35000,
+                recipe: 'STANDARD'
+            }
+        ];
+
+        // ===== EQUIPMENT CATALOG =====
+        const equipmentCatalog = [
+            {
+                id: 'roughing',
+                name: 'Roughing Pump Station',
+                description: 'Pre-evacuation system for faster initial pumpdown',
+                cost: 30000,
+                monthlyMaint: 1500,
+                benefit: 'Reduces cassette processing time by 1 month'
+            },
+            {
+                id: 'highVac',
+                name: 'High-Vacuum Chamber Upgrade',
+                description: 'Precision vacuum for advanced processes',
+                cost: 80000,
+                monthlyMaint: 4000,
+                benefit: 'Unlocks PRECISION recipes, +30% capacity'
+            },
+            {
+                id: 'cryo',
+                name: 'Cryogenic Pump System',
+                description: 'Ultra-cold pumping for specialty applications',
+                cost: 150000,
+                monthlyMaint: 7500,
+                benefit: 'Unlocks CRYO recipes, handles exotic gases'
+            },
+            {
+                id: 'cooling',
+                name: 'Chiller Cooling System',
+                description: 'Temperature control for high-temp processes',
+                cost: 50000,
+                monthlyMaint: 2000,
+                benefit: 'Unlocks HIGHTEMP recipes, thermal stability'
+            },
+            {
+                id: 'abatement',
+                name: 'Exhaust Gas Abatement',
+                description: 'Environmental compliance & waste processing',
+                cost: 45000,
+                monthlyMaint: 2500,
+                benefit: 'Process exotic gases safely, +eco-friendly'
+            }
+        ];
+
+        // ===== UTILITY FUNCTIONS =====
+        function formatCash(amount) {
+            return '$' + Math.floor(amount).toLocaleString();
+        }
+
+        function log(msg, type = 'info') {
+            const logEl = document.getElementById('eventLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const time = new Date().toLocaleTimeString();
+            entry.innerHTML = `<span class="log-time">[${game.month}]</span> ${msg}`;
+            logEl.insertBefore(entry, logEl.firstChild);
+            if (logEl.children.length > 50) logEl.removeChild(logEl.lastChild);
+        }
+
+        function addCash(amount) {
+            game.cash += amount;
+            if (amount > 0) {
+                game.totalRevenue += amount;
+                game.monthlyRevenue += amount;
+            } else {
+                game.totalExpenses += Math.abs(amount);
+            }
+            updateUI();
+            if (game.cash <= 0) triggerGameOver();
+        }
+
+        function canAfford(cost) {
+            return game.cash >= cost;
+        }
+
+        function closeModal() {
+            document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+        }
+
+        // ===== PUMP MANAGEMENT =====
+        function createPump(type) {
+            return {
+                id: game.pumpIDCounter++,
+                type: type,
+                health: pumpTypes[type].baseHealth,
+                age: 0,
+                failed: false,
+                x: Math.random() * 500 + 50,
+                y: Math.random() * 200 + 50
+            };
+        }
+
+        function buyTurboPump() {
+            const cost = pumpTypes.TURBOMOLECULAR.cost;
+            if (!canAfford(cost)) {
+                log('Insufficient funds for Turbomolecular Pump', 'error');
+                return;
+            }
+            const pump = createPump('TURBOMOLECULAR');
+            game.pumps.push(pump);
+            addCash(-cost);
+            game.monthlyUpgrades += cost;
+            log(`Purchased Turbomolecular Pump #${pump.id}`, 'success');
+            updateUI();
+        }
+
+        function buyRotaryPump() {
+            const cost = pumpTypes.ROTARY_VANE.cost;
+            if (!canAfford(cost)) {
+                log('Insufficient funds for Rotary Vane Pump', 'error');
+                return;
+            }
+            const pump = createPump('ROTARY_VANE');
+            game.pumps.push(pump);
+            addCash(-cost);
+            game.monthlyUpgrades += cost;
+            log(`Purchased Rotary Vane Pump #${pump.id}`, 'success');
+            updateUI();
+        }
+
+        function repairAllPumps() {
+            const failedCount = game.pumps.filter(p => p.failed).length;
+            if (failedCount === 0) {
+                log('No failed pumps to repair', 'warning');
+                return;
+            }
+            const costPerPump = 5000;
+            const totalCost = failedCount * costPerPump;
+            if (!canAfford(totalCost)) {
+                log('Insufficient funds for repairs', 'error');
+                return;
+            }
+            game.pumps.forEach(p => {
+                if (p.failed) {
+                    p.failed = false;
+                    p.health = 100;
+                    p.age = 0;
+                }
+            });
+            addCash(-totalCost);
+            game.monthlyUpgrades += totalCost;
+            log(`Repaired ${failedCount} pumps for ${formatCash(totalCost)}`, 'success');
+            updateUI();
+        }
+
+        function getWorkingCapacity() {
+            return game.pumps.filter(p => !p.failed).reduce((sum, p) => sum + pumpTypes[p.type].capacity, 0);
+        }
+
+        function getTotalCapacity() {
+            return game.pumps.reduce((sum, p) => sum + pumpTypes[p.type].capacity, 0);
+        }
+
+        function getWorkingPumpCount() {
+            return game.pumps.filter(p => !p.failed).length;
+        }
+
+        // ===== CONTRACT MANAGEMENT =====
+        function acceptContract(templateIndex) {
+            const template = contractLibrary[templateIndex];
+            
+            // Check requirements
+            if (template.requiresHighVac && !game.equipment.highVac.owned) {
+                log('High-Vac equipment required for ' + template.customer, 'error');
+                return;
+            }
+            if (template.requiresCooling && !game.equipment.cooling.owned) {
+                log('Cooling system required for ' + template.customer, 'error');
+                return;
+            }
+
+            const contract = {
+                id: game.contractIDCounter++,
+                customer: template.customer,
+                wafersPerMonth: template.wafersPerMonth,
+                monthlyFee: template.monthlyFee,
+                monthsRemaining: template.deadline,
+                penalty: template.penalty,
+                recipe: template.recipe,
+                wafersProcessed: 0,
+                penalties: 0
+            };
+
+            game.contracts.push(contract);
+            log(`New contract: ${contract.customer} (${contract.wafersPerMonth} wafers/mo)`, 'success');
+            updateUI();
+        }
+
+        function processPenalties() {
+            game.contracts.forEach(contract => {
+                const recipe = recipes[contract.recipe];
+                const workingCapacity = getWorkingCapacity();
+
+                // Check if contract can be fulfilled
+                if (workingCapacity < recipe.pumpingReq) {
+                    contract.penalties += contract.penalty;
+                    log(`${contract.customer}: PENALTY - Insufficient capacity`, 'error');
+                }
+            });
+
+            if (game.contracts.some(c => c.penalties > 0)) {
+                const totalPenalties = game.contracts.reduce((sum, c) => sum + c.penalties, 0);
+                addCash(-totalPenalties);
+                game.monthlyUpgrades += totalPenalties;
+            }
+        }
+
+        function endContracts() {
+            game.contracts = game.contracts.filter(c => {
+                c.monthsRemaining--;
+                if (c.monthsRemaining <= 0) {
+                    log(`Contract ended: ${c.customer}`, 'info');
+                    return false;
+                }
+                return true;
+            });
+        }
+
+        // ===== CASSETTE MANAGEMENT =====
+        function addCassette() {
+            if (game.cassettes.length >= 10) {
+                log('Maximum cassette queue reached', 'warning');
+                return;
+            }
+            const cassette = {
+                id: game.cassetteIDCounter++,
+                recipe: game.currentRecipe,
+                progress: 0,
+                totalMonths: recipes[game.currentRecipe].duration,
+                wafers: 1,
+                quality: 100
+            };
+            game.cassettes.push(cassette);
+            log(`Added cassette: ${recipes[cassette.recipe].name}`, 'success');
+            updateUI();
+        }
+
+        function setRecipe(recipeName) {
+            game.currentRecipe = recipeName;
+            document.querySelectorAll('.recipe-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`recipe-${recipeName}`).classList.add('active');
+        }
+
+        function processCassettes() {
+            const workingCapacity = getWorkingCapacity();
+            
+            game.cassettes = game.cassettes.filter(cassette => {
+                const recipe = recipes[cassette.recipe];
+                
+                // Check if recipe requirements are met
+                let canProcess = workingCapacity >= recipe.pumpingReq;
+                
+                if (recipe.requiresHighVac && !game.equipment.highVac.owned) canProcess = false;
+                if (recipe.requiresCooling && !game.equipment.cooling.owned) canProcess = false;
+
+                if (canProcess) {
+                    cassette.progress++;
+                    if (cassette.progress >= cassette.totalMonths) {
+                        const revenue = cassette.wafers * recipe.revenuePerWafer * recipe.qualityBonus;
+                        addCash(revenue);
+                        game.monthlyRevenue += revenue;
+                        log(`Cassette #${cassette.id} complete: ${formatCash(revenue)}`, 'success');
+                        return false; // Remove completed cassette
+                    }
+                } else {
+                    log(`Cassette #${cassette.id}: Insufficient resources for ${recipe.name}`, 'warning');
+                }
+
+                return true; // Keep cassette
+            });
+        }
+
+        // ===== PUMP AGING & FAILURE =====
+        function updatePumpHealth() {
+            game.pumps.forEach(pump => {
+                if (!pump.failed) {
+                    pump.age++;
+                    // Health degrades over time
+                    const ageDecay = (pump.age / pumpTypes[pump.type].lifespan) * 30;
+                    pump.health = Math.max(0, pumpTypes[pump.type].baseHealth - ageDecay);
+
+                    // Failure chance increases with age
+                    const failureChance = pumpTypes[pump.type].failureRate + (pump.age / pumpTypes[pump.type].lifespan) * 0.05;
+                    if (Math.random() < failureChance) {
+                        pump.failed = true;
+                        log(`❌ Pump #${pump.id} FAILED`, 'error');
+                    }
+                }
+            });
+        }
+
+        // ===== EQUIPMENT UPGRADES =====
+        function buyEquipment(equipmentId) {
+            const equipment = game.equipment[equipmentId];
+            if (equipment.owned) {
+                log('Equipment already owned', 'warning');
+                return;
+            }
+            if (!canAfford(equipment.cost)) {
+                log('Insufficient funds', 'error');
+                return;
+            }
+            equipment.owned = true;
+            addCash(-equipment.cost);
+            game.monthlyUpgrades += equipment.cost;
+            const name = equipmentCatalog.find(e => e.id === equipmentId)?.name || 'Equipment';
+            log(`Purchased: ${name}`, 'success');
+            closeModal();
+            updateUI();
+        }
+
+        // ===== MAINTENANCE COSTS =====
+        function applyMaintenanceCosts() {
+            // Pump maintenance
+            let pumpMaint = 0;
+            game.pumps.forEach(pump => {
+                if (!pump.failed) {
+                    pumpMaint += pumpTypes[pump.type].maintenance;
+                }
+            });
+            game.monthlyMaintenance += pumpMaint;
+
+            // Equipment maintenance
+            let equipMaint = 0;
+            Object.keys(game.equipment).forEach(key => {
+                if (game.equipment[key].owned) {
+                    equipMaint += game.equipment[key].maint;
+                }
+            });
+            game.monthlySystemMaint += equipMaint;
+
+            const totalMaint = pumpMaint + equipMaint;
+            addCash(-totalMaint);
+        }
+
+        // ===== MONTHLY SIMULATION =====
+        function simulateMonth() {
+            if (game.gameOver || game.paused) return;
+
+            // 1. Update pump health
+            updatePumpHealth();
+
+            // 2. Process cassettes
+            processCassettes();
+
+            // 3. Apply contract penalties
+            processPenalties();
+
+            // 4. Apply monthly revenue from contracts
+            let contractRevenue = 0;
+            game.contracts.forEach(c => {
+                contractRevenue += c.monthlyFee;
+            });
+            if (contractRevenue > 0) {
+                addCash(contractRevenue);
+                game.monthlyRevenue += contractRevenue;
+            }
+
+            // 5. Apply maintenance costs
+            applyMaintenanceCosts();
+
+            // 6. End contracts
+            endContracts();
+
+            // 7. Reset monthly counters
+            game.month++;
+            game.monthlyRevenue = 0;
+            game.monthlyMaintenance = 0;
+            game.monthlySystemMaint = 0;
+            game.monthlyUpgrades = 0;
+
+            updateUI();
+        }
+
+        // ===== UI UPDATES =====
+        function updateUI() {
+            updateHeader();
+            updateFinancialPanel();
+            updatePumpsList();
+            updateContractsList();
+            updateCassettesList();
+            updateEquipmentStatus();
+            updatePumpMap();
+        }
+
+        function updateHeader() {
+            document.getElementById('cashDisplay').textContent = formatCash(game.cash);
+            document.getElementById('monthDisplay').textContent = game.month;
+            
+            const monthlyRevenue = game.monthlyRevenue + game.contracts.reduce((sum, c) => sum + c.monthlyFee, 0);
+            document.getElementById('revenueDisplay').textContent = formatCash(monthlyRevenue);
+            
+            const monthlyCosts = game.monthlyMaintenance + game.monthlySystemMaint + game.monthlyUpgrades;
+            document.getElementById('costsDisplay').textContent = formatCash(monthlyCosts);
+            
+            const working = getWorkingPumpCount();
+            const total = game.pumps.length;
+            document.getElementById('pumpStatusDisplay').textContent = `${working}/${total}`;
+            document.getElementById('contractsDisplay').textContent = game.contracts.length;
+        }
+
+        function updateFinancialPanel() {
+            document.getElementById('finCash').textContent = formatCash(game.cash);
+            document.getElementById('finRevenue').textContent = formatCash(game.totalRevenue);
+            document.getElementById('finExpenses').textContent = formatCash(game.totalExpenses);
+            const netProfit = game.totalRevenue - game.totalExpenses;
+            const netEl = document.getElementById('finNet');
+            netEl.textContent = formatCash(netProfit);
+            netEl.className = 'financial-amount' + (netProfit < 0 ? ' negative' : '');
+
+            document.getElementById('monthRevenue').textContent = formatCash(game.monthlyRevenue);
+            document.getElementById('monthMaintenance').textContent = formatCash(game.monthlyMaintenance);
+            document.getElementById('monthSystemMaint').textContent = formatCash(game.monthlySystemMaint);
+            document.getElementById('monthUpgrades').textContent = formatCash(game.monthlyUpgrades);
+        }
+
+        function updatePumpsList() {
+            const list = document.getElementById('pumpsList');
+            if (game.pumps.length === 0) {
+                list.innerHTML = '<div style="color: #888; font-size: 10px;">No pumps yet</div>';
+                return;
+            }
+
+            list.innerHTML = game.pumps.map(pump => {
+                const type = pumpTypes[pump.type];
+                const healthPercent = pump.health;
+                let healthClass = '';
+                if (healthPercent < 30) healthClass = 'critical-health';
+                else if (healthPercent < 60) healthClass = 'warning-health';
+
+                return `
+                    <div class="pump-item ${healthClass}">
+                        <strong>${type.symbol} #${pump.id}</strong> ${pump.failed ? '❌ FAILED' : '✓'}
+                        <div class="pump-bar">
+                            <div class="bar">
+                                <div class="bar-fill ${pump.failed ? 'critical' : healthPercent < 60 ? 'warning' : ''}" 
+                                     style="width: ${pump.health}%"></div>
+                            </div>
+                        </div>
+                        <div style="font-size: 9px; color: #aaa; margin-top: 2px;">
+                            Age: ${pump.age}mo | Health: ${Math.round(pump.health)}% | Cap: ${type.capacity}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateContractsList() {
+            const list = document.getElementById('contractList');
+            if (game.contracts.length === 0) {
+                list.innerHTML = '<div style="color: #888; font-size: 10px;">No active contracts</div>';
+                return;
+            }
+
+            list.innerHTML = game.contracts.map(c => {
+                const recipe = recipes[c.recipe];
+                return `
+                    <div class="contract-item">
+                        <div class="contract-customer">${c.customer}</div>
+                        <div class="contract-terms">
+                            📦 ${c.wafersPerMonth} wafers/month<br>
+                            💰 ${formatCash(c.monthlyFee)}/month<br>
+                            ⏳ ${c.monthsRemaining} months remaining<br>
+                            🔬 Recipe: ${recipe.name}
+                            ${c.penalties > 0 ? `<br>⚠️ Penalties: ${formatCash(c.penalties)}` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateCassettesList() {
+            const list = document.getElementById('cassetteList');
+            if (game.cassettes.length === 0) {
+                list.innerHTML = '<div style="color: #888; font-size: 10px;">No cassettes in queue</div>';
+                return;
+            }
+
+            list.innerHTML = game.cassettes.map(c => {
+                const recipe = recipes[c.recipe];
+                const progressPercent = (c.progress / c.totalMonths) * 100;
+                const isActive = game.cassettes.indexOf(c) === 0;
+                
+                return `
+                    <div class="cassette-item ${isActive ? 'active' : ''}">
+                        <div class="cassette-name">#${c.id}: ${recipe.name}</div>
+                        <div class="cassette-progress">Progress: ${c.progress}/${c.totalMonths} months</div>
+                        <div class="bar">
+                            <div class="bar-fill" style="width: ${progressPercent}%"></div>
+                        </div>
+                        <div style="font-size: 9px; color: #aaa; margin-top: 3px;">
+                            Wafers: ${c.wafers} | Quality: ${c.quality}%
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+function updateEquipmentStatus() {
+            const list = document.getElementById('equipmentStatus');
+            const owned = Object.keys(game.equipment).filter(k => game.equipment[k].owned);
+            
+            if (owned.length === 0) {
+                list.innerHTML = '<div style="color: #888; font-size: 10px;">No system equipment</div>';
+                return;
+            }
+
+            list.innerHTML = owned.map(key => {
+                const eq = equipmentCatalog.find(e => e.id === key);
+                return `
+                    <div class="pump-item" style="border-color: #ffaa00;">
+                        <strong style="color: #ffaa00;">✓ ${eq.name}</strong>
+                        <div style="font-size: 9px; color: #aaa; margin-top: 3px;">
+                            Maint: ${formatCash(eq.monthlyMaint)}/mo
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updatePumpMap() {
+            const container = document.getElementById('pumpMapContainer');
+            
+            if (game.pumps.length === 0) {
+                container.innerHTML = '<div style="color: #666; text-align: center; padding: 40px; font-size: 11px;">No pumps deployed yet. Build some pumps to get started.</div>';
+                return;
+            }
+
+            container.innerHTML = game.pumps.map(pump => {
+                const type = pumpTypes[pump.type];
+                const status = pump.failed ? 'failed' : 'working';
+                return `
+                    <div class="pump-on-map ${status}" style="left: ${pump.x}px; top: ${pump.y}px;">
+                        <svg class="pump-icon" viewBox="0 0 100 100">
+                            ${getPumpSVG(pump.type, status)}
+                        </svg>
+                        <div class="pump-label">${type.symbol} #${pump.id}</div>
+                        <div class="pump-status-dot ${status}"></div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getPumpSVG(type, status) {
+            if (type === 'TURBOMOLECULAR') {
+                return `
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="${status === 'failed' ? '#ff4444' : '#00ff88'}" stroke-width="3"/>
+                    <path d="M 50 20 L 70 50 L 50 80 L 30 50 Z" fill="${status === 'failed' ? '#ff444433' : '#00ff8833'}" stroke="${status === 'failed' ? '#ff4444' : '#00ff88'}" stroke-width="2"/>
+                    <circle cx="50" cy="50" r="15" fill="${status === 'failed' ? '#ff4444' : '#00ff88'}"/>
+                `;
+            } else {
+                return `
+                    <rect x="20" y="20" width="60" height="60" fill="none" stroke="${status === 'failed' ? '#ff4444' : '#00ff88'}" stroke-width="3" rx="8"/>
+                    <circle cx="50" cy="35" r="8" fill="${status === 'failed' ? '#ff4444' : '#00ff88'}"/>
+                    <circle cx="50" cy="65" r="8" fill="${status === 'failed' ? '#ff4444' : '#00ff88'}"/>
+                    <line x1="50" y1="43" x2="50" y2="57" stroke="${status === 'failed' ? '#ff4444' : '#00ff88'}" stroke-width="2"/>
+                `;
+            }
+        }
+
+        function showEquipmentMenu() {
+            const modal = document.getElementById('equipmentModal');
+            const options = document.getElementById('equipmentOptions');
+            
+            options.innerHTML = equipmentCatalog.map(eq => {
+                const owned = game.equipment[eq.id].owned;
+                const canBuy = canAfford(eq.cost);
+                
+                return `
+                    <div class="equipment-option" style="${owned ? 'opacity: 0.5;' : ''}">
+                        <div class="equipment-name">
+                            ${eq.name}
+                            ${owned ? '<span class="vendor-badge">OWNED</span>' : ''}
+                        </div>
+                        <div class="equipment-specs">
+                            ${eq.description}<br>
+                            Cost: <strong>${formatCash(eq.cost)}</strong> | Maint: ${formatCash(eq.monthlyMaint)}/mo<br>
+                            <em>${eq.benefit}</em>
+                        </div>
+                        <button class="button" 
+                                onclick="buyEquipment('${eq.id}')"
+                                ${owned || !canBuy ? 'disabled' : ''}>
+                            ${owned ? 'OWNED' : canBuy ? 'BUY NOW' : 'INSUFFICIENT FUNDS'}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+
+            modal.classList.add('active');
+        }
+
+        function showUpgradesMenu() {
+            const modal = document.getElementById('upgradesModal');
+            const options = document.getElementById('upgradesOptions');
+            
+            options.innerHTML = `
+                <div class="equipment-option">
+                    <div class="equipment-name">🔬 Available Contracts</div>
+                    <div class="equipment-specs" style="margin-bottom: 8px;">
+                        Sign contracts with major semiconductor manufacturers for guaranteed revenue.
+                    </div>
+                </div>
+                ${contractLibrary.map((contract, idx) => {
+                    const exists = game.contracts.some(c => c.customer === contract.customer);
+                    return `
+                        <div class="equipment-option">
+                            <div class="equipment-name">${contract.customer}</div>
+                            <div class="equipment-specs">
+                                📦 ${contract.wafersPerMonth} wafers/month<br>
+                                💰 ${formatCash(contract.monthlyFee)}/month for ${contract.deadline} months<br>
+                                ⚠️ Penalty: ${formatCash(contract.penalty)} if unfulfilled<br>
+                                🔬 Recipe: ${recipes[contract.recipe].name}
+                                ${contract.requiresHighVac ? '<br>📋 Requires: High-Vac Equipment' : ''}
+                                ${contract.requiresCooling ? '<br>📋 Requires: Cooling System' : ''}
+                            </div>
+                            <button class="button" 
+                                    onclick="acceptContract(${idx})"
+                                    ${exists ? 'disabled' : ''}>
+                                ${exists ? 'ALREADY SIGNED' : 'SIGN CONTRACT'}
+                            </button>
+                        </div>
+                    `;
+                }).join('')}
+            `;
+
+            modal.classList.add('active');
+        }
+
+        function showRepairMenu() {
+            const modal = document.getElementById('repairModal');
+            const options = document.getElementById('repairOptions');
+            
+            const failedCount = game.pumps.filter(p => p.failed).length;
+            const costPer = 5000;
+            const totalCost = failedCount * costPer;
+            const canRepair = canAfford(totalCost) && failedCount > 0;
+
+            options.innerHTML = `
+                <div class="equipment-option">
+                    <div class="equipment-name">🔧 Pump Repair Service</div>
+                    <div class="equipment-specs">
+                        Failed Pumps: <strong>${failedCount}</strong><br>
+                        Cost per pump: ${formatCash(costPer)}<br>
+                        Total cost: <strong>${formatCash(totalCost)}</strong><br>
+                        <br>
+                        Emergency repairs restore failed pumps to 100% health and reset their age counter.
+                    </div>
+                    <button class="button danger" 
+                            onclick="repairAllPumps()"
+                            ${!canRepair ? 'disabled' : ''}>
+                        ${failedCount === 0 ? 'NO FAILED PUMPS' : canRepair ? 'AUTHORIZE REPAIRS' : 'INSUFFICIENT FUNDS'}
+                    </button>
+                </div>
+            `;
+
+            modal.classList.add('active');
+        }
+
+        function togglePause() {
+            game.paused = !game.paused;
+            document.getElementById('pauseLabel').textContent = game.paused ? 'RESUME' : 'PAUSE';
+            log(game.paused ? 'Game PAUSED' : 'Game RESUMED', 'info');
+        }
+
+        function triggerGameOver() {
+            game.gameOver = true;
+            const modal = document.getElementById('gameOverModal');
+            const msg = document.getElementById('gameOverMessage');
+            
+            const months = game.month;
+            const profit = game.totalRevenue - game.totalExpenses;
+            
+            msg.innerHTML = `
+                You've run out of cash after <strong>${months} months</strong> of operation.<br>
+                <br>
+                Total Revenue: <strong style="color: #00ff88;">${formatCash(game.totalRevenue)}</strong><br>
+                Total Expenses: <strong style="color: #ff6666;">${formatCash(game.totalExpenses)}</strong><br>
+                Final Balance: <strong style="color: ${profit >= 0 ? '#00ff88' : '#ff6666'}">${formatCash(profit)}</strong>
+            `;
+            
+            modal.classList.add('active');
+            log('BANKRUPTCY - Game Over', 'error');
+        }
+
+        // ===== KEYBOARD SHORTCUTS =====
+        document.addEventListener('keydown', (e) => {
+            if (game.gameOver) return;
+            
+            switch(e.key.toUpperCase()) {
+                case 'T':
+                    buyTurboPump();
+                    break;
+                case 'R':
+                    buyRotaryPump();
+                    break;
+                case 'F':
+                    repairAllPumps();
+                    break;
+                case 'E':
+                    showEquipmentMenu();
+                    break;
+                case 'C':
+                    showUpgradesMenu();
+                    break;
+                case ' ':
+                    e.preventDefault();
+                    togglePause();
+                    break;
+            }
+        });
+
+        // ===== GAME LOOP =====
+        setInterval(() => {
+            simulateMonth();
+        }, 2000); // Simulate 1 month every 2 seconds
+
+        // ===== INITIALIZATION =====
+        function init() {
+            setRecipe('STANDARD');
+            log('Semiconductor Fab Pump Tycoon started', 'success');
+            log('Beginning with $500,000 capital', 'info');
+            log('Press T to buy Turbo pump, R for Rotary pump', 'info');
+            log('Press E for equipment, C for contracts, SPACE to pause', 'info');
+            updateUI();
+        }
+
+        init();
+    </script>
+</body>
+</html>
+
+
+
