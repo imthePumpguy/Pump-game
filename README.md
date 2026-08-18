@@ -4900,3 +4900,1197 @@ Replace DuckDuckGo links with **local file paths**:
 ---
 
 Would you like me to **provide the refactored code split into these separate files**, ready to copy-paste into your blank GitHub repo? I can give you each file in order with clear labeling so you know exactly where to paste.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semiconductor Fab Pump Tycoon</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0e27 0%, #16213e 100%);
+            color: #00ff00;
+            padding: 15px;
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #00ff00;
+            padding-bottom: 10px;
+        }
+        
+        .header h1 {
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .facility-info {
+            color: #ffaa00;
+            font-size: 12px;
+        }
+        
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+        
+        .panel {
+            background: rgba(0, 20, 40, 0.9);
+            border: 2px solid #00ff00;
+            border-radius: 3px;
+            padding: 15px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+        
+        .panel h2 {
+            color: #ffaa00;
+            font-size: 16px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #00ff00;
+            padding-bottom: 8px;
+        }
+        
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+            font-size: 13px;
+        }
+        
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+        
+        .stat-label {
+            color: #aaa;
+        }
+        
+        .stat-value {
+            color: #00ff00;
+            font-weight: bold;
+        }
+        
+        .equipment-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #00ff00;
+            border-radius: 3px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .equipment-header {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .equipment-image {
+            width: 60px;
+            height: 60px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            border: 1px solid #00ff00;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+        
+        .equipment-info {
+            flex: 1;
+            font-size: 12px;
+        }
+        
+        .equipment-name {
+            color: #00ff00;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        
+        .equipment-status {
+            color: #aaa;
+            font-size: 11px;
+            margin-top: 2px;
+        }
+        
+        .meter-bar {
+            width: 100%;
+            height: 14px;
+            background: #1a1a1a;
+            border: 1px solid #00ff00;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        
+        .meter-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, #ffaa00);
+            transition: width 0.2s;
+            font-size: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: bold;
+        }
+        
+        .meter-fill.critical {
+            background: linear-gradient(90deg, #ff0000, #ff4444);
+        }
+        
+        .btn {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            padding: 8px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            margin-top: 8px;
+            width: 100%;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover:not(:disabled) {
+            background: rgba(0, 255, 0, 0.3);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn.danger {
+            background: rgba(255, 0, 0, 0.1);
+            border-color: #ff0000;
+            color: #ff0000;
+        }
+        
+        .shop-item {
+            background: rgba(0, 100, 0, 0.2);
+            border: 1px solid #00ff00;
+            border-radius: 3px;
+            padding: 10px;
+            margin-bottom: 8px;
+            font-size: 11px;
+        }
+        
+        .shop-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            color: #00ff00;
+            font-weight: bold;
+        }
+        
+        .shop-item-price {
+            color: #ffaa00;
+            font-size: 10px;
+        }
+        
+        .email-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 20, 40, 0.95);
+            border: 3px solid #ff0000;
+            border-radius: 3px;
+            padding: 25px;
+            max-width: 500px;
+            z-index: 1000;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .email-modal.active {
+            display: block;
+        }
+        
+        .email-subject {
+            color: #ff0000;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .email-body {
+            color: #fff;
+            font-size: 12px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .close-btn {
+            background: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 3px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+        }
+        
+        .log-entry {
+            font-size: 10px;
+            padding: 5px;
+            border-bottom: 1px solid rgba(0, 255, 0, 0.1);
+            color: #aaa;
+        }
+        
+        .log-entry.error {
+            color: #ff6666;
+        }
+        
+        .log-entry.success {
+            color: #00ff00;
+        }
+        
+        .log-entry.warning {
+            color: #ffaa00;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        @keyframes critical-blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.5; }
+        }
+        
+        .critical-status {
+            animation: critical-blink 0.5s infinite;
+            color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚙️ SEMICONDUCTOR FAB PUMP TYCOON</h1>
+        <div class="facility-info">Edwards Vacuum Systems - Real-Time Operations</div>
+    </div>
+    
+    <div class="main-container">
+        <!-- FINANCIAL DASHBOARD -->
+        <div class="panel">
+            <h2>💰 FINANCIAL DASHBOARD</h2>
+            <div class="stat-row">
+                <span class="stat-label">Cash Balance</span>
+                <span class="stat-value">$<span id="cashDisplay">50000</span></span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Monthly Revenue</span>
+                <span class="stat-value">$<span id="revenueDisplay">0</span></span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Monthly Costs</span>
+                <span class="stat-value">-$<span id="costsDisplay">0</span></span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Wafers Processed</span>
+                <span class="stat-value" id="wafersDisplay">0</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Wafers Scrapped</span>
+                <span class="stat-value" style="color: #ff6666;" id="scrappedDisplay">0</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Yield</span>
+                <span class="stat-value" id="yieldDisplay">100%</span>
+            </div>
+        </div>
+        
+        <!-- VACUUM SYSTEM OVERVIEW -->
+        <div class="panel">
+            <h2>📊 VACUUM SYSTEM STATUS</h2>
+            <div class="stat-row">
+                <span class="stat-label">Chamber Pressure</span>
+                <span class="stat-value"><span id="pressureDisplay">1.0</span> mTorr</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Foreline Pressure</span>
+                <span class="stat-value"><span id="forelineDisplay">10.0</span> mTorr</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Backing Pressure</span>
+                <span class="stat-value"><span id="backingDisplay">100.0</span> mTorr</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">System Temperature</span>
+                <span class="stat-value"><span id="tempDisplay">45</span>°C</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Particle Count</span>
+                <span class="stat-value"><span id="particleDisplay">0</span> /100</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Average Equipment Health</span>
+                <span class="stat-value" id="healthDisplay">100%</span>
+            </div>
+        </div>
+        
+        <!-- ACTIVE RECIPE -->
+        <div class="panel">
+            <h2>🧪 ACTIVE RECIPE</h2>
+            <div class="stat-row">
+                <span class="stat-label">Process</span>
+                <span class="stat-value" id="recipeDisplay">Al Evaporation</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Cassette Progress</span>
+                <span class="stat-value"><span id="cassetteProg">0</span>/25</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Process Time Remaining</span>
+                <span class="stat-value"><span id="timeRemDisplay">120</span>s</span>
+            </div>
+            <button class="btn" id="startRecipeBtn" data-recipe="al-evap">START Al EVAPORATION</button>
+            <button class="btn" id="startRecipeBtn2" data-recipe="oxide-dep">START OXIDE DEPOSITION</button>
+            <button class="btn danger" id="abortRecipeBtn">ABORT RECIPE</button>
+        </div>
+        
+        <!-- PUMPS & ROUGHING STAGE -->
+        <div class="panel">
+            <h2>💨 ROUGHING PUMPS (Stage 1)</h2>
+            <div id="roughingPumpsContainer"></div>
+        </div>
+        
+        <!-- HIGH VAC STAGE -->
+        <div class="panel">
+            <h2>🔻 HIGH VACUUM PUMPS (Stage 2)</h2>
+            <div id="highVacPumpsContainer"></div>
+        </div>
+        
+        <!-- ABATEMENT SYSTEM -->
+        <div class="panel">
+            <h2>🔥 EXHAUST ABATEMENT SYSTEM</h2>
+            <div id="abatementContainer"></div>
+        </div>
+        
+        <!-- COOLING & UTILITIES -->
+        <div class="panel">
+            <h2>❄️ COOLING & UTILITIES</h2>
+            <div id="coolingContainer"></div>
+        </div>
+        
+        <!-- EQUIPMENT SHOP -->
+        <div class="panel">
+            <h2>🛒 EQUIPMENT SHOP</h2>
+            <div id="shopContainer"></div>
+        </div>
+        
+        <!-- SYSTEM LOG -->
+        <div class="panel full-width">
+            <h2>📋 SYSTEM LOG</h2>
+            <div id="systemLog" style="max-height: 200px; overflow-y: auto;"></div>
+        </div>
+    </div>
+    
+    <!-- EMAIL ALERT MODAL -->
+    <div class="email-modal" id="emailModal">
+        <div class="email-subject" id="emailSubject">ALERT</div>
+        <div class="email-body" id="emailBody"></div>
+        <button class="close-btn" onclick="closeEmail()">ACKNOWLEDGE</button>
+    </div>
+    
+    <script>
+        // ============ GAME STATE ============
+        const gameState = {
+            cash: 50000,
+            monthlyRevenue: 0,
+            monthlyCosts: 0,
+            wafersProcessed: 0,
+            wafersScrapped: 0,
+            time: 0,
+            
+            // Vacuum system
+            chamberPressure: 1.0,
+            forelinePressure: 10.0,
+            backingPressure: 100.0,
+            systemTemp: 45,
+            particleCount: 0,
+            
+            // Recipe system
+            activeRecipe: null,
+            recipeProgress: 0,
+            recipeTime: 0,
+            cassette: 0,
+            
+            // Equipment
+            pumps: {},
+            abatement: null,
+            cooling: null,
+            
+            // Inventory
+            inventory: {
+                roughingPumps: [],
+                highVacPumps: [],
+                abatement: [],
+                cooling: []
+            }
+        };
+        
+        // ============ EQUIPMENT DEFINITIONS ============
+        const equipmentDefs = {
+            pumps: {
+                'qdp80': {
+                    name: 'QDP80 Rotary Vane',
+                    type: 'roughing',
+                    maxSpeed: 100,
+                    baseReliability: 0.85,
+                    baseCost: 45000,
+                    maintenanceCost: 3000,
+                    image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.edwardsvacuum.com%2Fen%2Fproducts%2Fpumps%2Frotary-vane-pump.jpg&f=1&nofb=1',
+                    powerConsumption: 2.5
+                },
+                'nxds300i': {
+                    name: 'NXDs300i Screw Pump',
+                    type: 'roughing',
+                    maxSpeed: 100,
+                    baseReliability: 0.88,
+                    baseCost: 65000,
+                    maintenanceCost: 4200,
+                    image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.edwardsvacuum.com%2Fen%2Fproducts%2Fpumps%2Fscrew-pump.jpg&f=1&nofb=1',
+                    powerConsumption: 3.5
+                },
+                'a65d': {
+                    name: 'A65D Dry Pump',
+                    type: 'roughing',
+                    maxSpeed: 100,
+                    baseReliability: 0.92,
+                    baseCost: 95000,
+                    maintenanceCost: 5500,
+                    image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.edwardsvacuum.com%2Fen%2Fproducts%2Fpumps%2Fdry-pump.jpg&f=1&nofb=1',
+                    powerConsumption: 4.0
+                },
+                'turbomolecular': {
+                    name: 'Turbomolecular Pump',
+                    type: 'highvac',
+                    maxSpeed: 100,
+                    baseReliability: 0.80,
+                    baseCost: 150000,
+                    maintenanceCost: 8000,
+                    image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.edwardsvacuum.com%2Fen%2Fproducts%2Fpumps%2Fturbomolecular.jpg&f=1&nofb=1',
+                    powerConsumption: 5.0
+                },
+                'cryogenic': {
+                    name: 'Cryogenic Pump',
+                    type: 'highvac',
+                    maxSpeed: 100,
+                    baseReliability: 0.78,
+                    baseCost: 200000,
+                    maintenanceCost: 10000,
+                    image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.edwardsvacuum.com%2Fen%2Fproducts%2Fpumps%2Fcryogenic.jpg&f=1&nofb=1',
+                    powerConsumption: 6.0
+                }
+            },
+            abatement: {
+                'eh2000': {
+                    name: 'Edwards EH2000 Abatement',
+                    maxTemp: 100,
+                    baseReliability: 0.80,
+                    baseCost: 125000,
+                    maintenanceCost: 7500,
+                    image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.buschvacuum.com%2Fmedia%2Fmedien%2Fproducts%2Ffamily%2Fgaba%2Fgaba-awe%2Fawe_050_ae%2Fgaba_awe-050-ae_767x510px_technology_767x510.png&f=1&nofb=1',
+                    powerConsumption: 3.0
+                },
+                'eh3000': {
+                    name: 'Edwards EH3000 Abatement',
+                    maxTemp: 120,
+                    baseReliability: 0.85,
+                    baseCost: 175000,
+                    maintenanceCost: 10000,
+                    image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.buschvacuum.com%2Fmedia%2Fmedien%2Fproducts%2Ffamily%2Fgaba%2Fgaba-awe%2Fawe_050_ae%2Fgaba_awe-050-ae_767x510px_technology_767x510.png&f=1&nofb=1',
+                    powerConsumption: 4.0
+                }
+            },
+            cooling: {
+                'basic-chiller': {
+                    name: 'Basic Chiller (5kW)',
+                    coolingCapacity: 5,
+                    baseReliability: 0.90,
+                    baseCost: 35000,
+                    maintenanceCost: 2000,
+                    image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0060%2F4265%2F2892%2Fproducts%2Fchiller.jpg&f=1&nofb=1',
+                    powerConsumption: 2.0
+                },
+                'industrial-chiller': {
+                    name: 'Industrial Chiller (15kW)',
+                    coolingCapacity: 15,
+                    baseReliability: 0.92,
+                    baseCost: 85000,
+                    maintenanceCost: 5000,
+                    image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0060%2F4265%2F2892%2Fproducts%2Fchiller.jpg&f=1&nofb=1',
+                    powerConsumption: 5.0
+                },
+                'oil-cart': {
+                    name: 'Vacuum Pump Oil Cart',
+                    coolingCapacity: 0,
+                    baseReliability: 0.95,
+                    baseCost: 12000,
+                    maintenanceCost: 1000,
+                    image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.tankandbarrel.com%2Fimages%2Frhino%2FRTT-7445.png&f=1&nofb=1',
+                    powerConsumption: 0.5
+                }
+            }
+        };
+        
+        // ============ RECIPE DEFINITIONS ============
+        const recipes = {
+            'al-evap': {
+                name: 'Al Evaporation',
+                duration: 120,
+                targetPressure: 1e-5,
+                targetTemp: 80,
+                wafersPerCassette: 25,
+                revenuePerWafer: 150
+            },
+            'oxide-dep': {
+                name: 'Oxide Deposition',
+                duration: 180,
+                targetPressure: 1e-6,
+                targetTemp: 120,
+                wafersPerCassette: 25,
+                revenuePerWafer: 220
+            }
+        };
+        
+        // ============ UTILITY FUNCTIONS ============
+        function createPump(type) {
+            const def = equipmentDefs.pumps[type];
+            return {
+                id: 'pump_' + Math.random().toString(36).substr(2, 9),
+                type: type,
+                speed: 0,
+                health: 100,
+                temp: 45,
+                vibration: 0,
+                failed: false,
+                lastMaintenance: gameState.time,
+                ...def
+            };
+        }
+        
+        function createAbatement(type) {
+            const def = equipmentDefs.abatement[type];
+            return {
+                id: 'abate_' + Math.random().toString(36).substr(2, 9),
+                type: type,
+                health: 100,
+                temp: 45,
+                failed: false,
+                lastMaintenance: gameState.time,
+                ...def
+            };
+        }
+        
+        function createCooling(type) {
+            const def = equipmentDefs.cooling[type];
+            return {
+                id: 'cool_' + Math.random().toString(36).substr(2, 9),
+                type: type,
+                health: 100,
+                temp: 45,
+                failed: false,
+                lastMaintenance: gameState.time,
+                ...def
+            };
+        }
+        
+        function logEntry(message, type = 'info') {
+            const log = document.getElementById('systemLog');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry ' + type;
+            const time = new Date().toLocaleTimeString();
+            entry.textContent = `[${time}] ${message}`;
+            log.insertBefore(entry, log.firstChild);
+            while (log.children.length > 50) log.removeChild(log.lastChild);
+        }
+        
+        function sendEmail(subject, body) {
+            document.getElementById('emailSubject').textContent = subject;
+            document.getElementById('emailBody').textContent = body;
+            document.getElementById('emailModal').classList.add('active');
+        }
+        
+        function closeEmail() {
+            document.getElementById('emailModal').classList.remove('active');
+        }
+        
+        function formatCurrency(num) {
+            return Math.floor(num).toLocaleString();
+        }
+        
+        function calculateSystemHealth() {
+            const allEquip = [
+                ...gameState.inventory.roughingPumps,
+                ...gameState.inventory.highVacPumps,
+                ...(gameState.abatement ? [gameState.abatement] : []),
+                ...(gameState.cooling ? [gameState.cooling] : [])
+            ];
+            if (allEquip.length === 0) return 100;
+            const avgHealth = allEquip.reduce((sum, e) => sum + e.health, 0) / allEquip.length;
+            return Math.round(avgHealth);
+        }
+        
+        // ============ PHYSICS & SIMULATION ============
+        function updateVacuumPhysics() {
+            // Calculate backing pressure from roughing pumps
+            let roughingSpeed = 0;
+            gameState.inventory.roughingPumps.forEach(pump => {
+                if (!pump.failed) roughingSpeed += pump.speed;
+            });
+            roughingSpeed = Math.min(roughingSpeed, 200); // Max combined speed
+            
+            // Backing pressure decreases with pump speed
+            gameState.backingPressure = Math.max(1, 100 - roughingSpeed * 0.4);
+            
+            // Calculate foreline from high vac pumps
+            let highVacSpeed = 0;
+            gameState.inventory.highVacPumps.forEach(pump => {
+                if (!pump.failed) highVacSpeed += pump.speed;
+            });
+            
+            // Chamber pressure calculation
+            if (highVacSpeed > 0) {
+                gameState.chamberPressure = Math.max(1e-7, 10 - highVacSpeed * 0.08);
+            } else {
+                gameState.chamberPressure = gameState.forelinePressure;
+            }
+            
+            // Foreline links roughing and high vac
+            gameState.forelinePressure = (gameState.backingPressure + gameState.chamberPressure) / 2;
+            
+            // Temperature increases with pump activity
+            const totalLoad = (roughingSpeed + highVacSpeed) / 2;
+            gameState.systemTemp = 45 + (totalLoad * 0.3);
+            if (gameState.cooling) {
+                gameState.systemTemp -= gameState.cooling.coolingCapacity;
+            }
+            gameState.systemTemp = Math.max(45, gameState.systemTemp);
+            
+            // Particle contamination (spikes during failures)
+            if (Math.random() < 0.02) {
+                gameState.particleCount = Math.min(100, gameState.particleCount + Math.random() * 5);
+            }
+            gameState.particleCount = Math.max(0, gameState.particleCount - 0.1);
+        }
+        
+        function updateEquipmentDegradation() {
+            // Update roughing pumps
+            gameState.inventory.roughingPumps.forEach(pump => {
+                if (pump.failed) return;
+                
+                // Degradation from speed
+                if (pump.speed > 80) {
+                    pump.health -= 0.15;
+                }
+                
+                // Degradation from temperature
+                if (gameState.systemTemp > 80) {
+                    pump.health -= 0.1;
+                }
+                
+                // Random failures (5% per tick when degraded)
+                if (pump.health < 40 && Math.random() < 0.05) {
+                    pump.failed = true;
+                    logEntry(`FAILURE: ${pump.name} has failed!`, 'error');
+                    sendEmail('EQUIPMENT FAILURE', `${pump.name} has failed. Downtime commenced. Maintenance required immediately.`);
+                    gameState.wafersScrapped += Math.floor(gameState.cassette * 0.5);
+                }
+                
+                pump.health = Math.max(0, pump.health);
+            });
+            
+            // Update high vac pumps
+            gameState.inventory.highVacPumps.forEach(pump => {
+                if (pump.failed) return;
+                if (pump.speed > 80) pump.health -= 0.15;
+                if (gameState.systemTemp > 90) pump.health -= 0.12;
+                if (pump.health < 40 && Math.random() < 0.05) {
+                    pump.failed = true;
+                    logEntry(`FAILURE: ${pump.name} has failed!`, 'error');
+                    sendEmail('CRITICAL: HIGH VAC FAILURE', `${pump.name} failure. Ultra-high vacuum lost. Wafers at risk.`);
+                    gameState.wafersScrapped += gameState.cassette;
+                }
+                pump.health = Math.max(0, pump.health);
+            });
+            
+            // Update abatement
+            if (gameState.abatement && !gameState.abatement.failed) {
+                if (gameState.systemTemp > 100) {
+                    gameState.abatement.health -= 0.2;
+                }
+                if (gameState.abatement.health < 30 && Math.random() < 0.08) {
+                    gameState.abatement.failed = true;
+                    logEntry('CRITICAL: Abatement system failed! Exhaust venting!', 'error');
+                    sendEmail('REGULATORY VIOLATION', 'Abatement failure detected. Emissions venting to atmosphere. Environmental fine: $50,000');
+                    gameState.cash -= 50000;
+                }
+                gameState.abatement.health = Math.max(0, gameState.abatement.health);
+            }
+            
+            // Update cooling
+            if (gameState.cooling && !gameState.cooling.failed) {
+                if (gameState.systemTemp > 90) {
+                    gameState.cooling.health -= 0.1;
+                }
+                if (gameState.cooling.health < 25 && Math.random() < 0.06) {
+                    gameState.cooling.failed = true;
+                    logEntry('WARNING: Cooling system failed. Temperature rising!', 'warning');
+                    gameState.systemTemp += 30;
+                }
+                gameState.cooling.health = Math.max(0, gameState.cooling.health);
+            }
+        }
+        
+        function updateRecipeExecution() {
+            if (!gameState.activeRecipe)
+ return;
+            
+            const recipe = recipes[gameState.activeRecipe];
+            gameState.recipeProgress++;
+            gameState.recipeTime++;
+            
+            // Check if recipe is complete
+            if (gameState.recipeProgress >= recipe.duration) {
+                // Calculate yield based on system state
+                let yieldMultiplier = 1.0;
+                if (gameState.particleCount > 50) yieldMultiplier -= 0.3;
+                if (gameState.systemTemp > 110) yieldMultiplier -= 0.2;
+                if (gameState.chamberPressure > 1e-4) yieldMultiplier -= 0.15;
+                
+                yieldMultiplier = Math.max(0.3, yieldMultiplier);
+                
+                const goodWafers = Math.floor(recipe.wafersPerCassette * yieldMultiplier);
+                const badWafers = recipe.wafersPerCassette - goodWafers;
+                
+                gameState.wafersProcessed += goodWafers;
+                gameState.wafersScrapped += badWafers;
+                gameState.monthlyRevenue += goodWafers * recipe.revenuePerWafer;
+                gameState.cassette = 0;
+                gameState.activeRecipe = null;
+                gameState.recipeProgress = 0;
+                
+                logEntry(`Recipe complete: ${goodWafers}/${recipe.wafersPerCassette} wafers good (${Math.round(yieldMultiplier*100)}% yield)`, 'success');
+            }
+        }
+        
+        function processMaintenance(equipmentId) {
+            const pump = gameState.inventory.roughingPumps.find(p => p.id === equipmentId) ||
+                        gameState.inventory.highVacPumps.find(p => p.id === equipmentId);
+            
+            if (pump && gameState.cash >= pump.maintenanceCost) {
+                pump.health = 100;
+                pump.failed = false;
+                pump.temp = 45;
+                pump.vibration = 0;
+                gameState.cash -= pump.maintenanceCost;
+                gameState.monthlyCosts += pump.maintenanceCost;
+                logEntry(`Maintenance: ${pump.name} serviced`, 'success');
+            }
+        }
+        
+        function buyEquipment(category, type) {
+            const defs = equipmentDefs[category];
+            if (!defs[type]) return;
+            
+            const cost = defs[type].baseCost;
+            if (gameState.cash < cost) {
+                logEntry(`Cannot afford ${defs[type].name} (need $${formatCurrency(cost)})`, 'error');
+                return;
+            }
+            
+            gameState.cash -= cost;
+            gameState.monthlyCosts += defs[type].maintenanceCost;
+            
+            if (category === 'pumps') {
+                const pump = createPump(type);
+                if (defs[type].type === 'roughing') {
+                    gameState.inventory.roughingPumps.push(pump);
+                } else {
+                    gameState.inventory.highVacPumps.push(pump);
+                }
+                logEntry(`Purchased: ${pump.name}`, 'success');
+            } else if (category === 'abatement') {
+                gameState.abatement = createAbatement(type);
+                logEntry(`Purchased: ${gameState.abatement.name}`, 'success');
+            } else if (category === 'cooling') {
+                gameState.cooling = createCooling(type);
+                logEntry(`Purchased: ${gameState.cooling.name}`, 'success');
+            }
+        }
+        
+        // ============ RENDERING ============
+        function renderPumps() {
+            const roughingDiv = document.getElementById('roughingPumpsContainer');
+            roughingDiv.innerHTML = '';
+            
+            gameState.inventory.roughingPumps.forEach((pump, idx) => {
+                const html = `
+                    <div class="equipment-card">
+                        <div class="equipment-header">
+                            <div class="equipment-image" style="background-image: url('${pump.image}')"></div>
+                            <div class="equipment-info">
+                                <div class="equipment-name">${pump.name}</div>
+                                <div class="equipment-status">Speed: ${pump.speed}% | Health: ${Math.round(pump.health)}%</div>
+                                <div class="equipment-status">${pump.failed ? '⚠️ FAILED' : 'Operational'}</div>
+                            </div>
+                        </div>
+                        <div class="meter-bar">
+                            <div class="meter-fill ${pump.health < 40 ? 'critical' : ''}" style="width: ${pump.health}%"></div>
+                        </div>
+                        <div style="display: flex; gap: 5px; margin-top: 8px;">
+                            <button class="btn pump-speed-btn" data-pump-id="${pump.id}" data-speed="0" style="flex: 1;">STOP</button>
+                            <button class="btn pump-speed-btn" data-pump-id="${pump.id}" data-speed="50" style="flex: 1;">50%</button>
+                            <button class="btn pump-speed-btn" data-pump-id="${pump.id}" data-speed="100" style="flex: 1;">MAX</button>
+                            <button class="btn pump-maint-btn" data-pump-id="${pump.id}" style="flex: 1;">SERVICE</button>
+                        </div>
+                    </div>
+                `;
+                roughingDiv.innerHTML += html;
+            });
+        }
+        
+        function renderHighVac() {
+            const highVacDiv = document.getElementById('highVacPumpsContainer');
+            highVacDiv.innerHTML = '';
+            
+            gameState.inventory.highVacPumps.forEach((pump, idx) => {
+                const html = `
+                    <div class="equipment-card">
+                        <div class="equipment-header">
+                            <div class="equipment-image" style="background-image: url('${pump.image}')"></div>
+                            <div class="equipment-info">
+                                <div class="equipment-name">${pump.name}</div>
+                                <div class="equipment-status">Speed: ${pump.speed}% | Health: ${Math.round(pump.health)}%</div>
+                                <div class="equipment-status">${pump.failed ? '⚠️ FAILED' : 'Operational'}</div>
+                            </div>
+                        </div>
+                        <div class="meter-bar">
+                            <div class="meter-fill ${pump.health < 40 ? 'critical' : ''}" style="width: ${pump.health}%"></div>
+                        </div>
+                        <div style="display: flex; gap: 5px; margin-top: 8px;">
+                            <button class="btn pump-speed-btn" data-pump-id="${pump.id}" data-speed="0" style="flex: 1;">STOP</button>
+                            <button class="btn pump-speed-btn" data-pump-id="${pump.id}" data-speed="50" style="flex: 1;">50%</button>
+                            <button class="btn pump-speed-btn" data-pump-id="${pump.id}" data-speed="100" style="flex: 1;">MAX</button>
+                            <button class="btn pump-maint-btn" data-pump-id="${pump.id}" style="flex: 1;">SERVICE</button>
+                        </div>
+                    </div>
+                `;
+                highVacDiv.innerHTML += html;
+            });
+        }
+        
+        function renderAbatement() {
+            const abateDiv = document.getElementById('abatementContainer');
+            
+            if (!gameState.abatement) {
+                abateDiv.innerHTML = '<div style="color: #aaa; font-size: 11px;">No abatement system installed</div>';
+                return;
+            }
+            
+            const html = `
+                <div class="equipment-card">
+                    <div class="equipment-header">
+                        <div class="equipment-image" style="background-image: url('${gameState.abatement.image}')"></div>
+                        <div class="equipment-info">
+                            <div class="equipment-name">${gameState.abatement.name}</div>
+                            <div class="equipment-status">Temp: ${Math.round(gameState.abatement.temp)}°C | Health: ${Math.round(gameState.abatement.health)}%</div>
+                            <div class="equipment-status">${gameState.abatement.failed ? '⚠️ FAILED - REGULATORY VIOLATION' : 'Operational'}</div>
+                        </div>
+                    </div>
+                    <div class="meter-bar">
+                        <div class="meter-fill ${gameState.abatement.health < 30 ? 'critical' : ''}" style="width: ${gameState.abatement.health}%"></div>
+                    </div>
+                    <button class="btn abate-maint-btn" style="margin-top: 8px;">SERVICE ABATEMENT</button>
+                </div>
+            `;
+            abateDiv.innerHTML = html;
+        }
+        
+        function renderCooling() {
+            const coolDiv = document.getElementById('coolingContainer');
+            
+            if (!gameState.cooling) {
+                coolDiv.innerHTML = '<div style="color: #aaa; font-size: 11px;">No cooling system installed</div>';
+                return;
+            }
+            
+            const html = `
+                <div class="equipment-card">
+                    <div class="equipment-header">
+                        <div class="equipment-image" style="background-image: url('${gameState.cooling.image}')"></div>
+                        <div class="equipment-info">
+                            <div class="equipment-name">${gameState.cooling.name}</div>
+                            <div class="equipment-status">Capacity: ${gameState.cooling.coolingCapacity}kW | Health: ${Math.round(gameState.cooling.health)}%</div>
+                            <div class="equipment-status">${gameState.cooling.failed ? '⚠️ FAILED - OVERHEATING RISK' : 'Operational'}</div>
+                        </div>
+                    </div>
+                    <div class="meter-bar">
+                        <div class="meter-fill ${gameState.cooling.health < 40 ? 'critical' : ''}" style="width: ${gameState.cooling.health}%"></div>
+                    </div>
+                    <button class="btn cool-maint-btn" style="margin-top: 8px;">SERVICE COOLING</button>
+                </div>
+            `;
+            coolDiv.innerHTML = html;
+        }
+        
+        function renderShop() {
+            const shopDiv = document.getElementById('shopContainer');
+            let html = '';
+            
+            html += '<div style="color: #aaa; margin-bottom: 10px; font-size: 10px;">ROUGHING STAGE</div>';
+            for (const [key, def] of Object.entries(equipmentDefs.pumps)) {
+                if (def.type === 'roughing') {
+                    html += `
+                        <div class="shop-item">
+                            <div class="shop-item-header">
+                                <span>${def.name}</span>
+                                <span class="shop-item-price">$${formatCurrency(def.baseCost)}</span>
+                            </div>
+                            <button class="btn" onclick="buyEquipment('pumps', '${key}')" style="width: 100%; margin-top: 4px; padding: 4px;">BUY</button>
+                        </div>
+                    `;
+                }
+            }
+            
+            html += '<div style="color: #aaa; margin-top: 10px; margin-bottom: 10px; font-size: 10px;">HIGH VACUUM STAGE</div>';
+            for (const [key, def] of Object.entries(equipmentDefs.pumps)) {
+                if (def.type === 'highvac') {
+                    html += `
+                        <div class="shop-item">
+                            <div class="shop-item-header">
+                                <span>${def.name}</span>
+                                <span class="shop-item-price">$${formatCurrency(def.baseCost)}</span>
+                            </div>
+                            <button class="btn" onclick="buyEquipment('pumps', '${key}')" style="width: 100%; margin-top: 4px; padding: 4px;">BUY</button>
+                        </div>
+                    `;
+                }
+            }
+            
+            html += '<div style="color: #aaa; margin-top: 10px; margin-bottom: 10px; font-size: 10px;">UTILITIES</div>';
+            for (const [key, def] of Object.entries(equipmentDefs.abatement)) {
+                html += `
+                    <div class="shop-item">
+                        <div class="shop-item-header">
+                            <span>${def.name}</span>
+                            <span class="shop-item-price">$${formatCurrency(def.baseCost)}</span>
+                        </div>
+                        <button class="btn" onclick="buyEquipment('abatement', '${key}')" style="width: 100%; margin-top: 4px; padding: 4px;">BUY</button>
+                    </div>
+                `;
+            }
+            
+            for (const [key, def] of Object.entries(equipmentDefs.cooling)) {
+                html += `
+                    <div class="shop-item">
+                        <div class="shop-item-header">
+                            <span>${def.name}</span>
+                            <span class="shop-item-price">$${formatCurrency(def.baseCost)}</span>
+                        </div>
+                        <button class="btn" onclick="buyEquipment('cooling', '${key}')" style="width: 100%; margin-top: 4px; padding: 4px;">BUY</button>
+                    </div>
+                `;
+            }
+            
+            shopDiv.innerHTML = html;
+        }
+        
+        function updateUI() {
+            // Financial
+            document.getElementById('cashDisplay').textContent = formatCurrency(gameState.cash);
+            document.getElementById('revenueDisplay').textContent = formatCurrency(gameState.monthlyRevenue);
+            document.getElementById('costsDisplay').textContent = formatCurrency(gameState.monthlyCosts);
+            document.getElementById('wafersDisplay').textContent = gameState.wafersProcessed;
+            document.getElementById('scrappedDisplay').textContent = gameState.wafersScrapped;
+            
+            const totalWafers = gameState.wafersProcessed + gameState.wafersScrapped;
+            const yieldPercent = totalWafers > 0 ? Math.round((gameState.wafersProcessed / totalWafers) * 100) : 100;
+            document.getElementById('yieldDisplay').textContent = yieldPercent + '%';
+            
+            // Vacuum System
+            document.getElementById('pressureDisplay').textContent = gameState.chamberPressure.toExponential(1);
+            document.getElementById('forelineDisplay').textContent = gameState.forelinePressure.toFixed(1);
+            document.getElementById('backingDisplay').textContent = gameState.backingPressure.toFixed(1);
+            document.getElementById('tempDisplay').textContent = Math.round(gameState.systemTemp);
+            document.getElementById('particleDisplay').textContent = Math.round(gameState.particleCount);
+            document.getElementById('healthDisplay').textContent = calculateSystemHealth() + '%';
+            
+            // Recipe
+            if (gameState.activeRecipe) {
+                const recipe = recipes[gameState.activeRecipe];
+                document.getElementById('recipeDisplay').textContent = recipe.name + ' (Running)';
+                document.getElementById('cassetteProg').textContent = gameState.cassette;
+                document.getElementById('timeRemDisplay').textContent = (recipe.duration - gameState.recipeProgress);
+            } else {
+                document.getElementById('recipeDisplay').textContent = 'Idle';
+                document.getElementById('cassetteProg').textContent = '0';
+                document.getElementById('timeRemDisplay').textContent = '—';
+            }
+            
+            // Pumps
+            renderPumps();
+            renderHighVac();
+            renderAbatement();
+            renderCooling();
+            renderShop();
+        }
+        
+        // ============ EVENT LISTENERS ============
+        function attachListeners() {
+            // Pump speed controls (delegated)
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('pump-speed-btn')) {
+                    const pumpId = e.target.dataset.pumpId;
+                    const speed = parseInt(e.target.dataset.speed);
+                    const pump = gameState.inventory.roughingPumps.find(p => p.id === pumpId) ||
+                                gameState.inventory.highVacPumps.find(p => p.id === pumpId);
+                    if  (pump) {
+                        pump.speed = speed;
+                    }
+                }
+                
+                if (e.target.classList.contains('pump-maint-btn')) {
+                    const pumpId = e.target.dataset.pumpId;
+                    processMaintenance(pumpId);
+                }
+                
+                if (e.target.classList.contains('abate-maint-btn')) {
+                    if (gameState.abatement && gameState.cash >= gameState.abatement.maintenanceCost) {
+                        gameState.abatement.health = 100;
+                        gameState.abatement.failed = false;
+                        gameState.abatement.temp = 45;
+                        gameState.cash -= gameState.abatement.maintenanceCost;
+                        gameState.monthlyCosts += gameState.abatement.maintenanceCost;
+                        logEntry(`Maintenance: ${gameState.abatement.name} serviced`, 'success');
+                    }
+                }
+                
+                if (e.target.classList.contains('cool-maint-btn')) {
+                    if (gameState.cooling && gameState.cash >= gameState.cooling.maintenanceCost) {
+                        gameState.cooling.health = 100;
+                        gameState.cooling.failed = false;
+                        gameState.cooling.temp = 45;
+                        gameState.cash -= gameState.cooling.maintenanceCost;
+                        gameState.monthlyCosts += gameState.cooling.maintenanceCost;
+                        logEntry(`Maintenance: ${gameState.cooling.name} serviced`, 'success');
+                    }
+                }
+            });
+            
+            // Recipe controls
+            document.getElementById('startRecipeBtn').addEventListener('click', () => {
+                if (gameState.activeRecipe) {
+                    logEntry('Recipe already in progress', 'warning');
+                    return;
+                }
+                
+                // Check if roughing is done
+                if (gameState.inventory.roughingPumps.length === 0) {
+                    logEntry('Cannot start recipe: No roughing pumps!', 'error');
+                    return;
+                }
+                
+                gameState.activeRecipe = 'al-evap';
+                gameState.recipeProgress = 0;
+                gameState.cassette = 25;
+                logEntry('Al Evaporation recipe started. 25 wafers loaded.', 'success');
+            });
+            
+            document.getElementById('startRecipeBtn2').addEventListener('click', () => {
+                if (gameState.activeRecipe) {
+                    logEntry('Recipe already in progress', 'warning');
+                    return;
+                }
+                
+                if (gameState.inventory.roughingPumps.length === 0) {
+                    logEntry('Cannot start recipe: No roughing pumps!', 'error');
+                    return;
+                }
+                
+                gameState.activeRecipe = 'oxide-dep';
+                gameState.recipeProgress = 0;
+                gameState.cassette = 25;
+                logEntry('Oxide Deposition recipe started. 25 wafers loaded.', 'success');
+            });
+            
+            document.getElementById('abortRecipeBtn').addEventListener('click', () => {
+                if (gameState.activeRecipe) {
+                    gameState.wafersScrapped += gameState.cassette;
+                    logEntry(`Recipe aborted! ${gameState.cassette} wafers scrapped.`, 'error');
+                    gameState.activeRecipe = null;
+                    gameState.recipeProgress = 0;
+                    gameState.cassette = 0;
+                } else {
+                    logEntry('No active recipe to abort', 'warning');
+                }
+            });
+        }
+        
+        // ============ GAME LOOP ============
+        function gameLoop() {
+            gameState.time++;
+            
+            // Update physics every tick
+            updateVacuumPhysics();
+            updateEquipmentDegradation();
+            updateRecipeExecution();
+            
+            // Monthly reset (every 6000 ticks = ~100 seconds)
+            if (gameState.time % 6000 === 0) {
+                gameState.cash += gameState.monthlyRevenue;
+                gameState.monthlyRevenue = 0;
+                gameState.monthlyCosts = 0;
+                logEntry('Monthly financial report: See dashboard', 'info');
+            }
+            
+            // Update UI every 100ms
+            if (gameState.time % 5 === 0) {
+                updateUI();
+            }
+        }
+        
+        // ============ INITIALIZATION ============
+        function initGame() {
+            // Add one starter pump
+            gameState.inventory.roughingPumps.push(createPump('qdp80'));
+            
+            logEntry('Fab initialized. Purchase equipment to begin operations.', 'info');
+            logEntry('Add high-vacuum pumps for better pressure control.', 'info');
+            logEntry('Install abatement system to prevent regulatory fines.', 'warning');
+            
+            updateUI();
+            attachListeners();
+            
+            // Start game loop (100ms per tick)
+            setInterval(gameLoop, 100);
+        }
+        
+        // Start when page loads
+        window.addEventListener('DOMContentLoaded', initGame);
+    </script>
+</body>
+</html>
+
+
+
